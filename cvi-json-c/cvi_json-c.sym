@@ -1,0 +1,170 @@
+
+/*
+ * Symbol versioning for libcvi_json-c.
+ * All exported symbols must be listed here.
+ *
+ * See 
+ *   https://software.intel.com/sites/default/files/m/a/1/e/dsohowto.pdf
+ */
+
+/*
+ * Symbols in JSONC_PRIVATE are exported for historical
+ * reasons, but should not be used outside of cvi_json-c.
+ */
+JSONC_PRIVATE {
+    array_list_add;
+    array_list_del_idx;
+    array_list_free;
+    array_list_new;
+    array_list_put_idx;
+    array_list_sort;
+    cvi_json_hex_chars;
+    cvi_json_parse_double;
+    cvi_json_parse_int64;
+    cvi_json_parse_uint64;
+    lh_table_delete;
+    lh_table_delete_entry;
+    lh_table_free;
+    lh_table_insert;
+    lh_table_insert_w_hash;
+    lh_table_new;
+    lh_table_resize;
+    mc_debug;
+    mc_error;
+    mc_get_debug;
+    mc_info;
+    mc_set_debug;
+    mc_set_syslog;
+    printbuf_free;
+    printbuf_memappend;
+    printbuf_memset;
+    printbuf_new;
+    printbuf_reset;
+    sprintbuf;
+};
+
+JSONC_0.14 {
+  global:
+    array_list_bsearch;
+    array_list_get_idx;
+    array_list_length;
+    cvi_json_c_get_random_seed;
+    cvi_json_c_object_sizeof;
+    cvi_json_c_set_serialization_double_format;
+    cvi_json_c_shallow_copy_default;
+    cvi_json_c_version;
+    cvi_json_c_version_num;
+    cvi_json_c_visit;
+    cvi_json_global_set_string_hash;
+    cvi_json_number_chars;
+    cvi_json_object_array_add;
+    cvi_json_object_array_bsearch;
+    cvi_json_object_array_del_idx;
+    cvi_json_object_array_get_idx;
+    cvi_json_object_array_length;
+    cvi_json_object_array_put_idx;
+    cvi_json_object_array_sort;
+    cvi_json_object_deep_copy;
+    cvi_json_object_double_to_cvi_json_string;
+    cvi_json_object_equal;
+    cvi_json_object_free_userdata;
+    cvi_json_object_from_fd;
+    cvi_json_object_from_fd_ex;
+    cvi_json_object_from_file;
+    cvi_json_object_get;
+    cvi_json_object_get_array;
+    cvi_json_object_get_boolean;
+    cvi_json_object_get_double;
+    cvi_json_object_get_int64;
+    cvi_json_object_get_int;
+    cvi_json_object_get_object;
+    cvi_json_object_get_string;
+    cvi_json_object_get_string_len;
+    cvi_json_object_get_type;
+    cvi_json_object_get_uint64;
+    cvi_json_object_get_userdata;
+    cvi_json_object_int_inc;
+    cvi_json_object_is_type;
+    cvi_json_object_iter_begin;
+    cvi_json_object_iter_end;
+    cvi_json_object_iter_equal;
+    cvi_json_object_iter_init_default;
+    cvi_json_object_iter_next;
+    cvi_json_object_iter_peek_name;
+    cvi_json_object_iter_peek_value;
+    cvi_json_object_new_array;
+    cvi_json_object_new_boolean;
+    cvi_json_object_new_double;
+    cvi_json_object_new_double_s;
+    cvi_json_object_new_int64;
+    cvi_json_object_new_int;
+    cvi_json_object_new_null;
+    cvi_json_object_new_object;
+    cvi_json_object_new_string;
+    cvi_json_object_new_string_len;
+    cvi_json_object_new_uint64;
+    cvi_json_object_object_add;
+    cvi_json_object_object_add_ex;
+    cvi_json_object_object_del;
+    cvi_json_object_object_get;
+    cvi_json_object_object_get_ex;
+    cvi_json_object_object_length;
+    cvi_json_object_put;
+    cvi_json_object_set_boolean;
+    cvi_json_object_set_double;
+    cvi_json_object_set_int64;
+    cvi_json_object_set_int;
+    cvi_json_object_set_serializer;
+    cvi_json_object_set_string;
+    cvi_json_object_set_string_len;
+    cvi_json_object_set_uint64;
+    cvi_json_object_set_userdata;
+    cvi_json_object_to_fd;
+    cvi_json_object_to_file;
+    cvi_json_object_to_file_ext;
+    cvi_json_object_to_cvi_json_string;
+    cvi_json_object_to_cvi_json_string_ext;
+    cvi_json_object_to_cvi_json_string_length;
+    cvi_json_object_userdata_to_cvi_json_string;
+    cvi_json_pointer_get;
+    cvi_json_pointer_getf;
+    cvi_json_pointer_set;
+    cvi_json_pointer_setf;
+    cvi_json_tokener_error_desc;
+    cvi_json_tokener_free;
+    cvi_json_tokener_get_error;
+    cvi_json_tokener_get_parse_end;
+    cvi_json_tokener_new;
+    cvi_json_tokener_new_ex;
+    cvi_json_tokener_parse;
+    cvi_json_tokener_parse_ex;
+    cvi_json_tokener_parse_verbose;
+    cvi_json_tokener_reset;
+    cvi_json_tokener_set_flags;
+    cvi_json_type_to_name;
+    cvi_json_util_get_last_err;
+    lh_char_equal;
+    lh_kchar_table_new;
+    lh_kptr_table_new;
+    lh_ptr_equal;
+    lh_table_length;
+    lh_table_lookup_entry;
+    lh_table_lookup_entry_w_hash;
+    lh_table_lookup_ex;
+
+  local:
+    *;
+};
+
+JSONC_0.15 {
+  global:
+    array_list_new2;
+    array_list_shrink;
+    cvi_json_object_array_shrink;
+    cvi_json_object_new_array_ext;
+} JSONC_0.14;
+
+JSONC_0.16 {
+#  global:
+#      ...new symbols here...
+} JSONC_0.15;

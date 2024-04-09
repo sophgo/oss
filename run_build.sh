@@ -57,9 +57,7 @@ if [ "$extract" = true ] ; then
 fi
 
 if [ "$sdk_arch" == "glibc_riscv64" ]; then
-  CFLAGS="${CFLAGS} -mcpu=c906fdv -march=rv64imafdcv0p7xthead -mcmodel=medany -mabi=lp64d"
-elif [ "$sdk_arch" == "musl_riscv64" ]; then
-  CFLAGS="${CFLAGS} -mcpu=c906fdv -march=rv64imafdcv0p7xthead -mcmodel=medany -mabi=lp64d"
+  CFLAGS="${CFLAGS} -march=rv64imafdcvxthead -mcmodel=medany -mabi=lp64dv"
 fi
 
 #

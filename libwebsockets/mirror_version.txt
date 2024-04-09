@@ -1,0 +1,1 @@
+mirror from branch v4.1-stable (https://github.com/warmcat/libwebsockets.git)

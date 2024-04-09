@@ -1,0 +1,5 @@
+mime_encodings.h
+mime_types.h
+*.o
+lib*.so
+lib*.a

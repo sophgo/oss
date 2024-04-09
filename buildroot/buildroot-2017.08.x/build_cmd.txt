@@ -1,0 +1,125 @@
+#
+# 1. build Command
+#
+
+# 1.1 Build for Toolchain and target binary
+#     base case(Current Toolchain setting) => config_2017.08.x
+mkdir ~/build-uclibc
+cd ~/build-uclibc
+cp oss/buildroot/buildroot-2017.08.x/config_2017.08.x ./.config
+make -C ../buildroot-2017.08.x/ O=${PWD}
+
+#
+# 1.2 uclibc memset.S replacement for arm optimized-rountines
+#
+After download uclibc source code, crtl+c to stop build uclibc
+cp oss/buildroot/buildroot-2017.08.x/memset.S ~/build-uclibc/build/uclibc-1.0.26/libc/string/arm/memset.S
+make -C ../buildroot-2017.08.x/ O=${PWD}
+
+#
+# 1.3 delete weak pthread_mutex_lock func
+#
+# Solution1:
+vim build/uclibc-1.0.26/libc/misc/internals/__uClibc_main.c
+del line from 79 to 104
+rm build/uclibc-1.0.26/.stamp_built
+rm build/uclibc-1.0.26/.stamp_*_installed
+make
+# Solution2:
+cp oss/buildroot/buildroot-2017.08.x/__uClibc_main.c build/uclibc-1.0.26/libc/misc/internals/__uClibc_main.c
+
+#
+# 2. In the build stage, need to fix the following errors
+#
+# Solution:
+# 2.1 Fix gnulib build fail
+cd ~/build-uclibc/build/host-m4-1.4.18/
+sed -i 's/IO_ftrylockfile/IO_EOF_SEEN/' lib/*.c
+echo "#define _IO_IN_BACKUP 0x100" >> lib/stdio-impl.h
+cd ../..
+make
+
+#
+# 2.2 Modify __ARM_ARCH_8A__ to __ARM_ARCH_7A__
+#
+# Solution 1:
+vi host-gcc-initial-6.4.0/gcc/config/arm/arm-cores.def
+vi host-gcc-final-6.4.0/gcc/config/arm/arm-cores.def
+#ARM_CORE("cortex-a53",  cortexa53, cortexa53, 8A, ARM_FSET_MAKE_CPU1 (FL_LDSCHED | FL_CRC32 | FL_FOR_ARCH8A),     cortex_a53)
+#Modify ca53 for 7A
+#ARM_CORE("cortex-a53",  cortexa53, cortexa53, 7A, ARM_FSET_MAKE_CPU1 (FL_LDSCHED | FL_CRC32 | FL_FOR_ARCH8A),     cortex_a53)
+# Solution 2:
+#or use cp to cover this job
+cp oss/buildroot/buildroot-2017.08.x/config/host-gcc-initial-6.4.0/arm-cores.def ~/build-uclibc/build/host-gcc-initial-6.4.0/gcc/config/arm/arm-cores.def
+cp oss/buildroot/buildroot-2017.08.x/config/host-gcc-final-6.4.0/arm-cores.def ~/build-uclibc/build/host-gcc-final-6.4.0/gcc/config/arm/arm-cores.def
+
+# 2.3 Fix usb build fail
+# Error message:
+# /usr/bin/ld: usb_linux.o: in function `find_usb_device.constprop.0':
+# usb_linux.c:(.text+0xe7b): undefined reference to `minor'
+# /usr/bin/ld: usb_linux.c:(.text+0xe8b): undefined reference to `major'
+#
+# Solution:
+vi ./build/host-android-tools-4.2.2+git20130218/core/adb/usb_linux.c
+#Add code => #include <sys/sysmacros.h>
+make
+
+# 2.4 use fix-rpath for Library runpath: [$ORIGIN/../../../../lib]
+make sdk
+
+# 2.5 Copy to host-tools and sysroot
+cp -af output/host/* $(host-tool)/gcc/arm-cvitek-linux-uclibcgnueabihf/
+cp -af outpu/target/* $(ramdisk)/rootfs/common_uclibc/
+git add $(host-tool)/gcc/arm-cvitek-linux-uclibcgnueabihf/
+
+# 2.6 Commit code for already has an entry in common_uclibc
+git add --update $(ramdisk)/rootfs/common_uclibc/
+
+
+
+
+
+
+
+
+#
+# 3. If needed(Non-essential)
+#    try build, need to build oss source code.
+#    Other package selection => config_2017.08.x_ffmpeg_gstreamer_opencv
+#
+
+#
+# 3.0 If needed, uclibc-menuconfig (Non-essential)
+#
+make uclibc-menuconfig
+
+# 3.1 Add target library of opencv3-3.2.0
+#make menuconfig
+#Choose opencv3->imgcodecs, imgproc, gstreamer(-1.x), ffmpeg
+mkdir ~/build-uclibc
+cd ~/build-uclibc
+cp oss/buildroot/buildroot-2017.08.x/config_2017.08.x_ffmpeg_gstreamer_opencv ./.config
+make -C ../buildroot-2017.08.x/ O=${PWD}
+
+# 3.2 Fix gnulib build fail
+cd ./build/host-bison-3.0.4
+sed -i 's/IO_ftrylockfile/IO_EOF_SEEN/' lib/*.c
+echo "#define _IO_IN_BACKUP 0x100" >> lib/stdio-impl.h
+cd ../..
+make
+
+# 3.3 Fix opencv build fail of opencv3-3.2.0
+vi ./build/opencv3-3.2.0/cmake/OpenCVCompilerOptions.cmake
+=> remove 21 rows => "else()"
+make
+
+# 3.4 use fix-rpath for Library runpath: [$ORIGIN/../../../../lib]
+make sdk
+
+# 3.5 Copy to host-tools and sysroot
+cp -af output/host/* $(host-tool)/gcc/arm-cvitek-linux-uclibcgnueabihf/
+cp -af output/target/* $(ramdisk)/rootfs/common_uclibc/
+git add $(host-tool)/gcc/arm-cvitek-linux-uclibcgnueabihf/
+
+# 3.6 Commit code for already has an entry in common_uclibc
+git add --update $(ramdisk)/rootfs/common_uclibc/
